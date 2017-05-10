@@ -32,6 +32,9 @@ android {
             jniLibs.srcDirs=['libs']//soÎÄ¼şÂ·¾¶
         }
 
+		androidTest{
+			java.srcDirs = ['src/com/parking/test']
+		}
         // Move the tests to tests/java, tests/res, etc...
         instrumentTest.setRoot('tests')
 
