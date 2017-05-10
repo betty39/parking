@@ -12,6 +12,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
+apply plugin: 'jacoco'
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -19,6 +21,10 @@ android {
     lintOptions{
            abortOnError false
      }
+	 
+	 jacoco{
+			version "0.7.4.201502262128"
+	 }
      
     sourceSets {
         main {
@@ -47,4 +53,29 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+}
+
+task jacocoTestReport(type:JacocoReport,dependsOn:"connectedAndroidTest"){
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports{
+        xml.enabled = false
+        html.enabled = true
+        csv.enabled = false
+    }
+    classDirectories = fileTree(
+            dir : "$buildDir/intermediates/classes/debug",
+            excludes : [
+                    '**/*Test.class',
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*'
+            ]
+    )
+    def coverageSourceDirs = ['src/main/java']
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    additionalClassDirs = files(coverageSourceDirs)
+    executionData = files("$buildDir/outputs/code-coverage/connected/coverage.ec")
 }
